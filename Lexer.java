@@ -54,6 +54,42 @@ public class Lexer {
                     continue;
                 }
 
+                switch (t) {
+                    case "(":
+                        position++;
+                        addToken(new Token(t, "Left Parenthesis"));
+                        break;
+                    case ")":
+                        position++;
+                        addToken(new Token(t, "Right Parenthesis"));
+                        break;
+                    case "{":
+                        position++;
+                        addToken(new Token(t, "Left Curly Bracket"));
+                        break;
+                    case "}":
+                        position++;
+                        addToken(new Token(t, "Right Curly Bracket"));
+                        break;
+                    case ";":
+                        position++;
+                        addToken(new Token(t, "Semi-colon"));
+                        break;
+                    case ",":
+                        position++;
+                        addToken(new Token(t, "Comma"));
+                        break;
+                    case "[":
+                        position++;
+                        addToken(new Token(t, "Left Square Bracket"));
+                        break;
+                    case "]":
+                        position++;
+                        addToken(new Token(t, "Left Square Bracket"));
+                        break;
+
+                }
+
                 if (t.equals("\"")) {
                     position++;
                     if (!addToken(scanForShortString(position, data))) {
