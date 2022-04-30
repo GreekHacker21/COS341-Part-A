@@ -58,35 +58,35 @@ public class Lexer {
                     case "(":
                         position++;
                         addToken(new Token(t, "Left Parenthesis"));
-                        break;
+                        continue;
                     case ")":
                         position++;
                         addToken(new Token(t, "Right Parenthesis"));
-                        break;
+                        continue;
                     case "{":
                         position++;
                         addToken(new Token(t, "Left Curly Bracket"));
-                        break;
+                        continue;
                     case "}":
                         position++;
                         addToken(new Token(t, "Right Curly Bracket"));
-                        break;
+                        continue;
                     case ";":
                         position++;
                         addToken(new Token(t, "Semi-colon"));
-                        break;
+                        continue;
                     case ",":
                         position++;
                         addToken(new Token(t, "Comma"));
-                        break;
+                        continue;
                     case "[":
                         position++;
                         addToken(new Token(t, "Left Square Bracket"));
-                        break;
+                        continue;
                     case "]":
                         position++;
                         addToken(new Token(t, "Left Square Bracket"));
-                        break;
+                        continue;
 
                 }
 
