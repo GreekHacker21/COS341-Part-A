@@ -7,12 +7,10 @@ public class Main {
            return;
         }
         lex.printTokens();
-        /*
-        String test = "\n1";
-        if((test.substring(0, 1).equals("\n"))){
-            System.out.println("YEEET");
-        }
-        */
+        System.out.println("\nAnother test file:\n");
+        Lexer test = new Lexer("yingTest.txt");
+        test.run();
+        test.printTokens();
     }
 
 }

@@ -37,7 +37,7 @@ public class Lexer {
         while (position < data.length()) {
 
             String t = data.substring(position, position + 1);
-            String regex = "-|[a-zA-Z0-9 {}(),.:;\"<>=\n]";
+            String regex = "-|[a-zA-Z0-9 {}(),.:;\"<>=\n\t]";
             p = Pattern.compile(regex);
             m = p.matcher(t);
 
@@ -50,6 +50,11 @@ public class Lexer {
                 }
 
                 if (t.equals(" ")) {
+                    position++;
+                    continue;
+                }
+
+                if (t.equals("\t")) {
                     position++;
                     continue;
                 }
@@ -190,7 +195,7 @@ public class Lexer {
         }
         if (data.substring(pos, pos + count + 1).contains("\"")) {
 
-            position = pos + count;
+            position = pos + count + 1;
             return new Token(data.substring(pos - 1, pos + count + 1), "ShortString");
         }
         System.out.println("LEXICAL ERROR");
@@ -221,6 +226,7 @@ public class Lexer {
             }
             count++;
         }
+        count--;
         regex = "^([-]?[1-9]+[0-9]*)$|^0$";
         p = Pattern.compile(regex);
         m = p.matcher(data.substring(pos - 1, pos + count));
@@ -337,14 +343,6 @@ public class Lexer {
             return new Token(data.substring(pos, pos + count), "Main Procedure definition");
         }
 
-        regex = "(^main$)";
-        p = Pattern.compile(regex);
-        m = p.matcher(data.substring(pos, pos + count));
-        if (m.find()) {
-            position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Main Procedure definition");
-        }
-
         regex = "(^arr$)";
         p = Pattern.compile(regex);
         m = p.matcher(data.substring(pos, pos + count));
@@ -366,7 +364,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Instruction type");
+            return new Token(data.substring(pos, pos + count), "Instruction " + data.substring(pos, pos + 1).toUpperCase() + data.substring(pos+1, pos + count));
         }
 
         regex = "[a-z]([az]|[0-9])*";
@@ -384,11 +382,14 @@ public class Lexer {
     }
 
     public void printTokens() {
+        int count = 0 ;
         Token curr = head;
         while (curr != null) {
             System.out.println("Token: " + curr.value + "\tType: " + curr.type);
             curr = curr.next;
+            count++;
         }
+        System.out.println("Token count: " + count);
     }
 
 }
