@@ -37,7 +37,7 @@ public class Lexer {
         while (position < data.length()) {
 
             String t = data.substring(position, position + 1);
-            String regex = "-|[a-zA-Z0-9 {}(),.:;\"<>=\n\t]";
+            String regex = "-|[a-zA-Z0-9 {}(),:;\"<>=\n\t]";
             p = Pattern.compile(regex);
             m = p.matcher(t);
 
@@ -119,6 +119,16 @@ public class Lexer {
                     continue;
                 }
 
+                regex = "[A-Z]";
+                p = Pattern.compile(regex);
+                m = p.matcher(t);
+                if (m.find()) {
+                    position++;
+                    System.out.println("LEXICAL ERROR");
+                    System.out.println("On line " + line + " the error of starting with a capital letter is not allowed. (" + t + ")");
+                    return new Token("LEXICAL ERROR");
+                }
+
                 if (t.equals("\"")) {
                     position++;
                     if (!addToken(scanForShortString(position, data))) {
@@ -184,16 +194,19 @@ public class Lexer {
             if (pos + count == data.length()) {
                 break;
             }
-            String regex = "([A-Z]|[0-9]|[ ]){0,15}\"";
+            String regex = "\"";
             p = Pattern.compile(regex);
-            m = p.matcher(data.substring(pos, pos + count + 1));
+            m = p.matcher(data.substring(pos + count, pos + count + 1));
 
             if (m.find()) {
                 break;
             }
             count++;
         }
-        if (data.substring(pos, pos + count + 1).contains("\"")) {
+        String regex = "^([A-Z]|[0-9]|[ ]){0,15}\"$";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count + 1));
+        if (m.find()) {
 
             position = pos + count + 1;
             return new Token(data.substring(pos - 1, pos + count + 1), "ShortString");
@@ -253,13 +266,12 @@ public class Lexer {
             return null;
         }
         System.out.println("LEXICAL ERROR");
-        System.out.println("On line " + line + " unfound error.");
+        System.out.println("On line " + line + ", it is not a number.");
         return null;
     }
 
     public Token scanForText(int pos, String data) {
         // pos is start of the text and not the second character
-
 
         Pattern p;
         Matcher m;
@@ -274,7 +286,7 @@ public class Lexer {
                     break;
                 }
                 count++;
-                //System.out.println(count);
+                // System.out.println(count);
                 m = p.matcher(data.substring(pos, pos + count + 1));
             }
         }
@@ -364,7 +376,8 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Instruction " + data.substring(pos, pos + 1).toUpperCase() + data.substring(pos+1, pos + count));
+            return new Token(data.substring(pos, pos + count),
+                    "Instruction " + data.substring(pos, pos + 1).toUpperCase() + data.substring(pos + 1, pos + count));
         }
 
         regex = "[a-z]([az]|[0-9])*";
@@ -382,7 +395,7 @@ public class Lexer {
     }
 
     public void printTokens() {
-        int count = 0 ;
+        int count = 0;
         Token curr = head;
         while (curr != null) {
             System.out.println("Token: " + curr.value + "\tType: " + curr.type);
