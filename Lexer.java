@@ -8,7 +8,7 @@ public class Lexer {
 
     private String fileName;
     public Token head = null, tail = null;
-    public int position;
+    public int position, line;
 
     Lexer(String fN) {
         fileName = fN;
@@ -17,7 +17,8 @@ public class Lexer {
     public Token run() {
 
         String data = "";
-        int position = 0, line = 0;
+        position = 0;
+        line = 0;
         Pattern p;
         Matcher m;
 
@@ -90,11 +91,20 @@ public class Lexer {
 
                 }
 
+                regex = "-|[0-9]";
+                p = Pattern.compile(regex);
+                m = p.matcher(t);
+                if (m.find()) {
+                    position++;
+                    if (!addToken(scanForNumbers(position, data))) {
+                        return new Token("LEXICAL ERROR");
+                    }
+                    continue;
+                }
+
                 if (t.equals("\"")) {
                     position++;
                     if (!addToken(scanForShortString(position, data))) {
-                        System.out.println("LEXICAL ERROR");
-                        System.out.println("The character " + t + " on line " + line + " is not allowed.");
                         return new Token("LEXICAL ERROR");
                     }
                     continue;
@@ -133,6 +143,11 @@ public class Lexer {
         Matcher m;
         int count = 0;
         while (count <= 15) {
+            if (!(pos + count < data.length())) {
+                System.out.println("LEXICAL ERROR");
+                System.out.println("The string  on line " + line + " is missing an close inverted comma.");
+                return null;
+            }
             String regex = "([A-Z]|[0-9]|[ ]){0,15}\"";
             p = Pattern.compile(regex);
             m = p.matcher(data.substring(pos, pos + count + 1));
@@ -142,14 +157,72 @@ public class Lexer {
                     break;
                 }
             } else {
+                System.out.println("LEXICAL ERROR");
+                System.out.println("The string  on line " + line + " has an illegal character for ShortStrings.");
                 return null;
             }
+            count++;
         }
         if (data.substring(pos, pos + count + 1).contains("\"")) {
 
             position = pos + count;
             return new Token(data.substring(pos - 1, pos + count + 1), "ShortString");
         }
+        System.out.println("LEXICAL ERROR");
+        System.out.println("The string  on line " + line + " is missing an close inverted comma.");
+        return null;
+    }
+
+    public Token scanForNumbers(int pos, String data) {
+        Pattern p;
+        Matcher m;
+        int count = 0;
+        String regex = "[0-9]";
+        if (!(pos < data.length())) {
+            if (data.substring(pos - 1, pos) == "-") {
+                System.out.println("LEXICAL ERROR");
+                System.out.println("On line " + line + " the minus is not followed by any value");
+            } else {
+                return new Token(data.substring(pos - 1, pos), "Number");
+            }
+        }
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + 1));
+        while (m.find()) {
+            if (pos + count == data.length()) {
+                break;
+            } else {
+                m = p.matcher(data.substring(pos + count, pos + count + 1));
+            }
+            count++;
+        }
+        regex = "^([-]?[1-9]+[0-9]*)$|^0$";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos - 1, pos + count));
+        if (m.find()) {
+
+            position = pos + count;
+            return new Token(data.substring(pos - 1, pos + count), "ShortString");
+        }
+        if (data.substring(pos - 1, pos) == "0") {
+            if (count > 0) {
+                System.out.println("LEXICAL ERROR");
+                System.out.println("On line " + line + " the zero cannot be a leading character in a number.");
+                return null;
+            }
+        }
+        if (data.substring(pos - 1, pos) == "-") {
+            if (count == 0) {
+                System.out.println("LEXICAL ERROR");
+                System.out.println("On line " + line + " the negative sign needs a value.");
+            }else{
+                System.out.println("LEXICAL ERROR");
+                System.out.println("On line " + line + " the negative sign cannot be followed by a zero.");
+            }
+            return null;
+        }
+        System.out.println("LEXICAL ERROR");
+        System.out.println("On line " + line + " unfound error.");
         return null;
     }
 
