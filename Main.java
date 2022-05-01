@@ -7,6 +7,7 @@ public class Main {
            return;
         }
         lex.printTokens();
+
         System.out.println("\nAnother test file:\n");
         Lexer test = new Lexer("yingTest.txt");
         test.run();

@@ -1,16 +1,16 @@
 main{
 	while("NKU")
-	do{
-		call factorial
-	};
-	if(32)
-	then
-	{
-		x:= input(y)
-	}
-	else{
-		call xy
-	}
-	halt;
-	num z;
+    do{
+        call factorial
+    };
+    if(32)
+    then
+    {
+        x:= input(y)
+    }
+    else{
+        call xy
+    }
+    halt;
+    num z;
 }

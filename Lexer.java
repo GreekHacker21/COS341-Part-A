@@ -37,7 +37,7 @@ public class Lexer {
         while (position < data.length()) {
 
             String t = data.substring(position, position + 1);
-            String regex = "-|[a-zA-Z0-9 {}(),:;\"<>=\n\t]";
+            String regex = "^-|[a-zA-Z0-9 {}(),:;\"<>=\n\t]$";
             p = Pattern.compile(regex);
             m = p.matcher(t);
 
@@ -56,6 +56,7 @@ public class Lexer {
 
                 if (t.equals("\t")) {
                     position++;
+                    //System.out.println(line);
                     continue;
                 }
 
@@ -161,8 +162,9 @@ public class Lexer {
                 // use substring for the rest of the tokens and regular expressions.
 
             } else {
+                String temp = data.substring(position, position + 1);
                 System.out.println("LEXICAL ERROR");
-                System.out.println("The character " + t + " on line " + line + " is not allowed.");
+                System.out.println("The character " + t + " on line " + line + " is not allowed. (" + temp + ")");
                 return new Token("LEXICAL ERROR");
             }
 
@@ -211,8 +213,9 @@ public class Lexer {
             position = pos + count + 1;
             return new Token(data.substring(pos - 1, pos + count + 1), "ShortString");
         }
+        String temp = data.substring(pos - 1, pos + count + 1);
         System.out.println("LEXICAL ERROR");
-        System.out.println("The string  on line " + line + " is not the correct format for a ShortString.");
+        System.out.println("The string  on line " + line + " is not the correct format for a ShortString.(" + temp + ")");
         return null;
     }
 
@@ -222,7 +225,7 @@ public class Lexer {
         int count = 0;
         String regex = "[0-9]";
         if (!(pos < data.length())) {
-            if (data.substring(pos - 1, pos) == "-") {
+            if (data.substring(pos - 1, pos).equals("-")) {
                 System.out.println("LEXICAL ERROR");
                 System.out.println("On line " + line + " the minus is not followed by any value");
             } else {
@@ -235,11 +238,10 @@ public class Lexer {
             if (pos + count == data.length()) {
                 break;
             } else {
+                count++;
                 m = p.matcher(data.substring(pos + count, pos + count + 1));
             }
-            count++;
         }
-        count--;
         regex = "^([-]?[1-9]+[0-9]*)$|^0$";
         p = Pattern.compile(regex);
         m = p.matcher(data.substring(pos - 1, pos + count));
@@ -248,25 +250,26 @@ public class Lexer {
             position = pos + count;
             return new Token(data.substring(pos - 1, pos + count), "ShortString");
         }
-        if (data.substring(pos - 1, pos) == "0") {
+        String temp = data.substring(pos - 1, pos + count);
+        if (data.substring(pos - 1, pos).equals("0")) {
             if (count > 0) {
                 System.out.println("LEXICAL ERROR");
-                System.out.println("On line " + line + " the zero cannot be a leading character in a number.");
+                System.out.println("On line " + line + " the zero cannot be a leading character in a number. (" + temp + ")");
                 return null;
             }
         }
-        if (data.substring(pos - 1, pos) == "-") {
+        if (data.substring(pos - 1, pos).equals("-")) {
             if (count == 0) {
                 System.out.println("LEXICAL ERROR");
-                System.out.println("On line " + line + " the negative sign needs a value.");
+                System.out.println("On line " + line + " the negative sign needs a value.(" + temp + ")");
             } else {
                 System.out.println("LEXICAL ERROR");
-                System.out.println("On line " + line + " the negative sign cannot be followed by a zero.");
+                System.out.println("On line " + line + " the negative sign cannot be followed by a zero.(" + temp + ")");
             }
             return null;
         }
         System.out.println("LEXICAL ERROR");
-        System.out.println("On line " + line + ", it is not a number.");
+        System.out.println("On line " + line + ", it is not a number.(" + temp + ")");
         return null;
     }
 
@@ -380,16 +383,16 @@ public class Lexer {
                     "Instruction " + data.substring(pos, pos + 1).toUpperCase() + data.substring(pos + 1, pos + count));
         }
 
-        regex = "[a-z]([az]|[0-9])*";
+        regex = "[a-z]([a-z]|[0-9])*";
         p = Pattern.compile(regex);
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
             return new Token(data.substring(pos, pos + count), "userDefinedName");
         }
-
+        String temp = data.substring(pos, pos + count);
         System.out.println("LEXICAL ERROR");
-        System.out.println("On line " + line + ", there is no acceptable format given.");
+        System.out.println("On line " + line + ", there is no acceptable format given. (" + temp + ")");
         return null;
 
     }
