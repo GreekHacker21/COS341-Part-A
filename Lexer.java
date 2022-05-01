@@ -18,7 +18,7 @@ public class Lexer {
 
         String data = "";
         position = 0;
-        line = 0;
+        line = 1;
         Pattern p;
         Matcher m;
 
@@ -34,11 +34,10 @@ public class Lexer {
             System.out.println("File not found.");
             return new Token("File not found.");
         }
-
-        while (position < data.length() - 1) {
+        while (position < data.length()) {
 
             String t = data.substring(position, position + 1);
-            String regex = "-|[a-zA-Z0-9 {}(),.;\"<>=\n]";
+            String regex = "-|[a-zA-Z0-9 {}(),.:;\"<>=\n]";
             p = Pattern.compile(regex);
             m = p.matcher(t);
 
@@ -88,6 +87,19 @@ public class Lexer {
                         position++;
                         addToken(new Token(t, "Left Square Bracket"));
                         continue;
+                    case ":":
+                        position++;
+                        t = data.substring(position, position + 1);
+                        if (t.equals("=")) {
+                            position++;
+                            addToken(new Token(":=", "Assign"));
+                        } else {
+                            System.out.println("LEXICAL ERROR");
+                            System.out.println("On line " + line
+                                    + " the : is not followed by an = to look as :=. In correct assign format.");
+                            return new Token("LEXICAL ERROR");
+                        }
+                        break;
 
                 }
 
@@ -110,6 +122,27 @@ public class Lexer {
                     continue;
                 }
 
+                regex = "-|[0-9]";
+                p = Pattern.compile(regex);
+                m = p.matcher(t);
+                if (m.find()) {
+                    position++;
+                    if (!addToken(scanForNumbers(position, data))) {
+                        return new Token("LEXICAL ERROR");
+                    }
+                    continue;
+                }
+
+                regex = "[a-z]";
+                p = Pattern.compile(regex);
+                m = p.matcher(t);
+                if (m.find()) {
+                    if (!addToken(scanForText(position, data))) {
+                        return new Token("LEXICAL ERROR");
+                    }
+                    continue;
+                }
+
                 // use substring for the rest of the tokens and regular expressions.
 
             } else {
@@ -120,7 +153,7 @@ public class Lexer {
 
         }
 
-        return null;
+        return head;
     }
 
     public boolean addToken(Token t) {
@@ -143,23 +176,15 @@ public class Lexer {
         Matcher m;
         int count = 0;
         while (count <= 15) {
-            if (!(pos + count < data.length())) {
-                System.out.println("LEXICAL ERROR");
-                System.out.println("The string  on line " + line + " is missing an close inverted comma.");
-                return null;
+            if (pos + count == data.length()) {
+                break;
             }
             String regex = "([A-Z]|[0-9]|[ ]){0,15}\"";
             p = Pattern.compile(regex);
             m = p.matcher(data.substring(pos, pos + count + 1));
 
             if (m.find()) {
-                if (data.substring(pos + count, pos + count + 1) == "\"") {
-                    break;
-                }
-            } else {
-                System.out.println("LEXICAL ERROR");
-                System.out.println("The string  on line " + line + " has an illegal character for ShortStrings.");
-                return null;
+                break;
             }
             count++;
         }
@@ -169,7 +194,7 @@ public class Lexer {
             return new Token(data.substring(pos - 1, pos + count + 1), "ShortString");
         }
         System.out.println("LEXICAL ERROR");
-        System.out.println("The string  on line " + line + " is missing an close inverted comma.");
+        System.out.println("The string  on line " + line + " is not the correct format for a ShortString.");
         return null;
     }
 
@@ -215,7 +240,7 @@ public class Lexer {
             if (count == 0) {
                 System.out.println("LEXICAL ERROR");
                 System.out.println("On line " + line + " the negative sign needs a value.");
-            }else{
+            } else {
                 System.out.println("LEXICAL ERROR");
                 System.out.println("On line " + line + " the negative sign cannot be followed by a zero.");
             }
@@ -224,6 +249,146 @@ public class Lexer {
         System.out.println("LEXICAL ERROR");
         System.out.println("On line " + line + " unfound error.");
         return null;
+    }
+
+    public Token scanForText(int pos, String data) {
+        // pos is start of the text and not the second character
+
+
+        Pattern p;
+        Matcher m;
+        int count = 1;
+        String regex = "^[a-z]([a-z]|[0-9])*$";
+
+        if (pos + 1 != data.length()) {
+            p = Pattern.compile(regex);
+            m = p.matcher(data.substring(pos, pos + count + 1));
+            while (m.find()) {
+                if (pos + count + 1 == data.length()) {
+                    break;
+                }
+                count++;
+                //System.out.println(count);
+                m = p.matcher(data.substring(pos, pos + count + 1));
+            }
+        }
+
+        regex = "(^add$)|(^sub$)|(^mult$)|(^larger$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Number operators");
+        }
+
+        regex = "(^input$)|(^output$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "I/O character");
+        }
+
+        regex = "(^eq$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Comparison operator");
+        }
+
+        regex = "(^and$)|(^or$)|(^not$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Boolean operator");
+        }
+
+        regex = "(^num$)|(^bool$)|(^string$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Variable type");
+        }
+
+        regex = "(^true$)|(^false$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Boolean value");
+        }
+
+        regex = "(^proc$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Procedure definition");
+        }
+
+        regex = "(^main$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Main Procedure definition");
+        }
+
+        regex = "(^main$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Main Procedure definition");
+        }
+
+        regex = "(^arr$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Array");
+        }
+
+        regex = "(^halt$)|(^return$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Algorithm end");
+        }
+
+        regex = "(^if$)|(^then$)|(^else$)|(^do$)|(^until$)|(^while$)|(^call$)";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "Instruction type");
+        }
+
+        regex = "[a-z]([az]|[0-9])*";
+        p = Pattern.compile(regex);
+        m = p.matcher(data.substring(pos, pos + count));
+        if (m.find()) {
+            position = pos + count;
+            return new Token(data.substring(pos, pos + count), "userDefinedName");
+        }
+
+        System.out.println("LEXICAL ERROR");
+        System.out.println("On line " + line + ", there is no acceptable format given.");
+        return null;
+
+    }
+
+    public void printTokens() {
+        Token curr = head;
+        while (curr != null) {
+            System.out.println("Token: " + curr.value + "\tType: " + curr.type);
+            curr = curr.next;
+        }
     }
 
 }

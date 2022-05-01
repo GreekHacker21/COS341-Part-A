@@ -1,3 +1,6 @@
 main{
+    number1 := add(number1,number2);
     halt;
+    num number1;
+    num number2;
 }
