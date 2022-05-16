@@ -1,12 +1,38 @@
+import java.io.File;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class Parser {
 
     public Token root;
     public Token current;
-    SyntaxError error;
+    public SyntaxError error;
+    public DocumentBuilderFactory docFactory;
+    public DocumentBuilder docBuilder;
+    public Document doc;
 
     Parser(Token r) {
         root = r;
         current = root;
+        try {
+            docFactory = DocumentBuilderFactory.newInstance();
+            docBuilder = docFactory.newDocumentBuilder();
+            doc = docBuilder.newDocument();
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        }
+
     }
 
     public void parse() {
@@ -16,38 +42,48 @@ public class Parser {
             System.out.println(e.getMessage());
             return;
         }
+
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult output = new StreamResult(new File("output.xml"));
+            transformer.transform(source, output);
+            System.out.println("File saved!");
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        }
     }
 
     // SPLProgr → ProcDefs main { Algorithm halt ; VarDecl }
     public void SPLProgr() throws SyntaxError {
-        if (current.value.equals("proc")) { 
+        if (current.value.equals("proc")) {
             ProcDefs();
         }
-        
+
         if (!current.value.equals("main")) {
             throw new SyntaxError("Missing main keyword on line " + current.line + ".");
         }
 
-        if(hasNext()){
+        if (hasNext()) {
             goToNext();
-        }else{
+        } else {
             throw new SyntaxError("Missing { after main on line " + current.line + ".");
         }
 
-        if(!current.value.equals("{")){
+        if (!current.value.equals("{")) {
             throw new SyntaxError("Missing { after main on line " + current.line + ".");
         }
 
-        if(hasNext()){
+        if (hasNext()) {
             goToNext();
-        }else{
+        } else {
             throw new SyntaxError("Missing the keyword halt on line " + current.line + ".");
         }
 
-        if(current.value.equals("output")||current.type.equals("userDefinedName")||current.value.equals("{")){
+        if (current.value.equals("output") || current.type.equals("userDefinedName") || current.value.equals("{")) {
             Algorithm();
         }
-
 
     }
 
