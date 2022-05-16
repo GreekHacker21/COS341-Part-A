@@ -2,11 +2,13 @@ public class Token {
 
     public String value, type;
     public Token next;
+    public int line;
 
-    Token(String v, String t){
+    Token(String v, String t, int l){
         value = v;
         type = t;
         next = null;
+        line = l;
     }
 
     Token(String v){

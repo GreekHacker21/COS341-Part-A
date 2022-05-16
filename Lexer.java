@@ -63,42 +63,42 @@ public class Lexer {
                 switch (t) {
                     case "(":
                         position++;
-                        addToken(new Token(t, "Left Parenthesis"));
+                        addToken(new Token(t, "Left Parenthesis", line));
                         continue;
                     case ")":
                         position++;
-                        addToken(new Token(t, "Right Parenthesis"));
+                        addToken(new Token(t, "Right Parenthesis", line));
                         continue;
                     case "{":
                         position++;
-                        addToken(new Token(t, "Left Curly Bracket"));
+                        addToken(new Token(t, "Left Curly Bracket", line));
                         continue;
                     case "}":
                         position++;
-                        addToken(new Token(t, "Right Curly Bracket"));
+                        addToken(new Token(t, "Right Curly Bracket", line));
                         continue;
                     case ";":
                         position++;
-                        addToken(new Token(t, "Semi-colon"));
+                        addToken(new Token(t, "Semi-colon", line));
                         continue;
                     case ",":
                         position++;
-                        addToken(new Token(t, "Comma"));
+                        addToken(new Token(t, "Comma", line));
                         continue;
                     case "[":
                         position++;
-                        addToken(new Token(t, "Left Square Bracket"));
+                        addToken(new Token(t, "Left Square Bracket", line));
                         continue;
                     case "]":
                         position++;
-                        addToken(new Token(t, "Left Square Bracket"));
+                        addToken(new Token(t, "Left Square Bracket", line));
                         continue;
                     case ":":
                         position++;
                         t = data.substring(position, position + 1);
                         if (t.equals("=")) {
                             position++;
-                            addToken(new Token(":=", "Assign"));
+                            addToken(new Token(":=", "Assign", line));
                         } else {
                             System.out.println("LEXICAL ERROR");
                             System.out.println("On line " + line
@@ -211,7 +211,7 @@ public class Lexer {
         if (m.find()) {
 
             position = pos + count + 1;
-            return new Token(data.substring(pos - 1, pos + count + 1), "ShortString");
+            return new Token(data.substring(pos - 1, pos + count + 1), "ShortString", line);
         }
         String temp = data.substring(pos - 1, pos + count + 1);
         System.out.println("LEXICAL ERROR");
@@ -229,7 +229,7 @@ public class Lexer {
                 System.out.println("LEXICAL ERROR");
                 System.out.println("On line " + line + " the minus is not followed by any value");
             } else {
-                return new Token(data.substring(pos - 1, pos), "Number");
+                return new Token(data.substring(pos - 1, pos), "Number", line);
             }
         }
         p = Pattern.compile(regex);
@@ -248,7 +248,7 @@ public class Lexer {
         if (m.find()) {
 
             position = pos + count;
-            return new Token(data.substring(pos - 1, pos + count), "ShortString");
+            return new Token(data.substring(pos - 1, pos + count), "ShortString", line);
         }
         String temp = data.substring(pos - 1, pos + count);
         if (data.substring(pos - 1, pos).equals("0")) {
@@ -299,7 +299,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Number operators");
+            return new Token(data.substring(pos, pos + count), "Number operators", line);
         }
 
         regex = "(^input$)|(^output$)";
@@ -307,7 +307,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "I/O character");
+            return new Token(data.substring(pos, pos + count), "I/O character", line);
         }
 
         regex = "(^eq$)";
@@ -315,7 +315,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Comparison operator");
+            return new Token(data.substring(pos, pos + count), "Comparison operator", line);
         }
 
         regex = "(^and$)|(^or$)|(^not$)";
@@ -323,7 +323,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Boolean operator");
+            return new Token(data.substring(pos, pos + count), "Boolean operator", line);
         }
 
         regex = "(^num$)|(^bool$)|(^string$)";
@@ -331,7 +331,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Variable type");
+            return new Token(data.substring(pos, pos + count), "Variable type", line);
         }
 
         regex = "(^true$)|(^false$)";
@@ -339,7 +339,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Boolean value");
+            return new Token(data.substring(pos, pos + count), "Boolean value", line);
         }
 
         regex = "(^proc$)";
@@ -347,7 +347,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Procedure definition");
+            return new Token(data.substring(pos, pos + count), "Procedure definition", line);
         }
 
         regex = "(^main$)";
@@ -355,7 +355,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Main Procedure definition");
+            return new Token(data.substring(pos, pos + count), "Main Procedure definition", line);
         }
 
         regex = "(^arr$)";
@@ -363,7 +363,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Array");
+            return new Token(data.substring(pos, pos + count), "Array", line);
         }
 
         regex = "(^halt$)|(^return$)";
@@ -371,7 +371,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "Algorithm end");
+            return new Token(data.substring(pos, pos + count), "Algorithm end", line);
         }
 
         regex = "(^if$)|(^then$)|(^else$)|(^do$)|(^until$)|(^while$)|(^call$)";
@@ -380,7 +380,7 @@ public class Lexer {
         if (m.find()) {
             position = pos + count;
             return new Token(data.substring(pos, pos + count),
-                    "Instruction " + data.substring(pos, pos + 1).toUpperCase() + data.substring(pos + 1, pos + count));
+                    "Instruction " + data.substring(pos, pos + 1).toUpperCase() + data.substring(pos + 1, pos + count), line);
         }
 
         regex = "[a-z]([a-z]|[0-9])*";
@@ -388,7 +388,7 @@ public class Lexer {
         m = p.matcher(data.substring(pos, pos + count));
         if (m.find()) {
             position = pos + count;
-            return new Token(data.substring(pos, pos + count), "userDefinedName");
+            return new Token(data.substring(pos, pos + count), "userDefinedName", line);
         }
         String temp = data.substring(pos, pos + count);
         System.out.println("LEXICAL ERROR");
