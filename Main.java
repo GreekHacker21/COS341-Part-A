@@ -22,21 +22,31 @@ public class Main {
             return;
         }
         lex.printTokens();
+        Parser parser = new Parser(result);
+        parser.parse();
+        
         try {
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.newDocument();
+
             Element root = doc.createElement("GOD");
             doc.appendChild(root);
+
             Element rootElement = doc.createElement("CONFIGURATION");
             root.appendChild(rootElement);
+            rootElement.appendChild(doc.createTextNode("chrome"));
+
+
             Element browser = doc.createElement("BROWSER");
             browser.appendChild(doc.createTextNode("chrome"));
             rootElement.appendChild(browser);
+
             Element base = doc.createElement("BASE");
             base.appendChild(doc.createTextNode("http:fut"));
             rootElement.appendChild(base);
+
             Element employee = doc.createElement("EMPLOYEE");
             rootElement.appendChild(employee);
             Element empName = doc.createElement("EMP_NAME");
@@ -44,6 +54,7 @@ public class Main {
             employee.appendChild(empName);
             Element actDate = doc.createElement("ACT_DATE");
             actDate.appendChild(doc.createTextNode("20131201"));
+            rootElement.appendChild(doc.createTextNode("chrome"));
             employee.appendChild(actDate);
             Element yeet = doc.createElement("CONFIGURATION");
             root.appendChild(yeet);
