@@ -1025,7 +1025,22 @@ public class Parser {
     public void UnOp(Element connect) throws SyntaxError {
         Element element = doc.createElement("UnOp");
         connect.appendChild(element);
-
+        if(current.value.equals("input")){
+            element.appendChild(doc.createTextNode(current.value));
+            if (hasNext()) {
+                goToNext();
+            } else {
+                return;
+            }
+        }
+        if(current.value.equals("not")){
+            element.appendChild(doc.createTextNode(current.value));
+            if (hasNext()) {
+                goToNext();
+            } else {
+                return;
+            }
+        }
     }
 
     // BinOp → and(Expr,Expr)
