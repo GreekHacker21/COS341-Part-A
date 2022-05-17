@@ -1053,7 +1053,7 @@ public class Parser {
     public void BinOp(Element connect) throws SyntaxError {
         Element element = doc.createElement("BinOp");
         connect.appendChild(element);
-
+        
     }
 
     // VarDecl → // nothing (nullable)
@@ -1102,16 +1102,19 @@ public class Parser {
 
         switch (current.value) {
             case "arr":
-                VarDecl(element);
+                //VarDecl(element);
                 break;
             case "num":
                 TYP(element);
+                Var(element);
                 break;
             case "bool":
                 TYP(element);
+                Var(element);
                 break;
             case "string":
                 TYP(element);
+                Var(element);
                 break;
         }
     }
