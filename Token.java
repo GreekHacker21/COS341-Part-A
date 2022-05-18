@@ -9,6 +9,7 @@ public class Token {
         type = t;
         next = null;
         line = l;
+        //System.out.println(value);
     }
 
     Token(String v){

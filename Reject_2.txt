@@ -1,0 +1,10 @@
+main{
+    while("SHORT")
+    do{
+        if("HELLO World")
+        then{
+            x:= not(y);
+        };
+    };
+    halt;
+}

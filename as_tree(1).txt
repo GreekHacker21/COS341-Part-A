@@ -1,0 +1,27 @@
+└─0:SPL
+ └─1:Algorithm
+  └─2:Instr
+   └─3:ASSIGN
+    ├─4:LHS
+    │ └─5:LHS: output
+    └─6:Expr
+     └─7:BinOp
+      ├─8:binop: and
+      ├─9:Expr
+      │ └─10:Const
+      │  └─11:Const: true
+      └─12:Expr
+       └─13:UnOp
+        ├─14:unop: not
+        └─15:Expr
+         └─16:UnOp
+          ├─17:unop: not
+          └─18:Expr
+           └─19:BinOp
+            ├─20:binop: add
+            ├─21:Expr
+            │ └─22:Const
+            │  └─23:shortString : "HESS"
+            └─24:Expr
+             └─25:Const
+              └─26:Const: true

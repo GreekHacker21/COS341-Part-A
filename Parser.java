@@ -211,11 +211,11 @@ public class Parser {
         }
 
         // userDefinedName check
-        if (!current.type.equals("userDefinedname")) {
+        if (!current.type.equals("userDefinedName")) {
             throw new SyntaxError("missing a userDefinedName on line " + current.line + ".");
         }
         element.appendChild(doc.createTextNode(current.value));
-        // userDefinedName = current.value;
+        userDefinedName = current.value;
         addCustomText(element, current.type, current.value);
         if (hasNext()) {
             current = current.next;
@@ -265,7 +265,7 @@ public class Parser {
 
         // return check
         if (!current.value.equals("return")) {
-            throw new SyntaxError("Missing return for  " + userDefinedName + " on line " + current.line + ".");
+            throw new SyntaxError("Missing return for " + userDefinedName + " on line " + current.line + ".");
         }
         element.appendChild(doc.createTextNode(current.value));
 
@@ -273,13 +273,13 @@ public class Parser {
             goToNext();
         } else {
             throw new SyntaxError(
-                    "Missing ; after return on line for  " + userDefinedName + " on line " + current.line + ".");
+                    "Missing ; after return on line for " + userDefinedName + " on line " + current.line + ".");
         }
 
         // ; check
         if (!current.value.equals(";")) {
             throw new SyntaxError(
-                    "Missing ; after return on line for  " + userDefinedName + " on line " + current.line + ".");
+                    "Missing ; after return on line for " + userDefinedName + " on line " + current.line + ".");
         }
         element.appendChild(doc.createTextNode(current.value));
 
@@ -309,7 +309,7 @@ public class Parser {
         // } check
         if (!current.value.equals("}")) {
             throw new SyntaxError(
-                    "Missing } after return on line for  " + userDefinedName + " on line " + current.line + ".");
+                    "Missing } after return on line for " + userDefinedName + " on line " + current.line + ".");
         }
         element.appendChild(doc.createTextNode(current.value));
 
@@ -798,7 +798,7 @@ public class Parser {
             return;
         }
         if (current.type.equals("userDefinedName")) {
-            addCustomText(element, current.type, current.value);
+            //addCustomText(element, current.type, current.value);
             Token temp;
             if (hasNext()) {
                 temp = current.next;
@@ -870,7 +870,7 @@ public class Parser {
 
         // userDefinedName VarFieldChoice
         if (current.type.equals("userDefinedName")) {
-            addCustomText(element, current.type, current.value);
+            //addCustomText(element, current.type, current.value);
             Token temp;
             if (hasNext()) {
                 temp = current.next;
@@ -976,20 +976,20 @@ public class Parser {
     // FieldIndex → Var
     // FieldIndex → Const
     public void FieldIndex(Element connect) throws SyntaxError {
-        Element element = doc.createElement("FieldIndex");
-        connect.appendChild(element);
+        //Element element = doc.createElement("FieldIndex");
+        //connect.appendChild(element);
         // Const
         if (current.value.equals("true") || current.value.equals("false")) {
-            Const(element);
+            Const(connect);
             return;
         }
         if (current.type.equals("Number") || current.type.equals("ShortString")) {
-            Const(element);
+            Const(connect);
             return;
         }
         // Var
         if (current.type.equals("userDefinedName")) {
-            Var(element);
+            Var(connect);
             return;
         }
 
@@ -1025,21 +1025,43 @@ public class Parser {
     public void UnOp(Element connect) throws SyntaxError {
         Element element = doc.createElement("UnOp");
         connect.appendChild(element);
-        if(current.value.equals("input")){
-            element.appendChild(doc.createTextNode(current.value));
-            if (hasNext()) {
-                goToNext();
-            } else {
-                return;
-            }
+        element.appendChild(doc.createTextNode(current.value));
+        String UnOpType = current.value;
+        if (hasNext()) {
+            goToNext();
+        } else {
+            throw new SyntaxError(UnOpType + " is not a completed unary operation on line " + current.line);
         }
-        if(current.value.equals("not")){
-            element.appendChild(doc.createTextNode(current.value));
-            if (hasNext()) {
-                goToNext();
-            } else {
-                return;
-            }
+
+        // ( check
+        if (!current.value.equals("(")) {
+            throw new SyntaxError(UnOpType + " is not a completed unary operation on line " + current.line);
+        }
+        element.appendChild(doc.createTextNode(current.value));
+
+        if (hasNext()) {
+            goToNext();
+        } else {
+            throw new SyntaxError(UnOpType + " is not a completed unary operation on line " + current.line);
+        }
+
+        if (UnOpType.equals("input")) {
+            Var(element);
+        }
+        if (UnOpType.equals("not")) {
+            Expr(element);
+        }
+
+        // ) check
+        if (!current.value.equals(")")) {
+            throw new SyntaxError(UnOpType + " is not a completed unary operation on line " + current.line);
+        }
+        element.appendChild(doc.createTextNode(current.value));
+
+        if (hasNext()) {
+            goToNext();
+        } else {
+            return;
         }
     }
 
@@ -1053,7 +1075,55 @@ public class Parser {
     public void BinOp(Element connect) throws SyntaxError {
         Element element = doc.createElement("BinOp");
         connect.appendChild(element);
-        
+        element.appendChild(doc.createTextNode(current.value));
+        String BinOpType = current.value;
+
+        if (hasNext()) {
+            goToNext();
+        } else {
+            throw new SyntaxError(BinOpType + " is not a completed binary operation on line " + current.line);
+        }
+
+        // ( check
+        if (!current.value.equals("(")) {
+            throw new SyntaxError(BinOpType + " is not a completed binary operation on line " + current.line + ".");
+        }
+        element.appendChild(doc.createTextNode(current.value));
+
+        if (hasNext()) {
+            goToNext();
+        } else {
+            throw new SyntaxError(BinOpType + " is not a completed binary operation on line " + current.line + ".");
+        }
+
+        Expr(element);
+
+        // , check
+        if (!current.value.equals(",")) {
+            throw new SyntaxError(BinOpType + " is not a completed binary operation on line " + current.line + ".");
+        }
+        element.appendChild(doc.createTextNode(current.value));
+
+        if (hasNext()) {
+            goToNext();
+        } else {
+            throw new SyntaxError(BinOpType + " is not a completed binary operation on line " + current.line + ".");
+        }
+
+        Expr(element);
+
+        // ) check
+        if (!current.value.equals(")")) {
+            throw new SyntaxError(BinOpType + " is not a completed binary operation on line " + current.line + ".");
+        }
+        element.appendChild(doc.createTextNode(current.value));
+
+        if (hasNext()) {
+            goToNext();
+        } else {
+            return;
+        }
+
     }
 
     // VarDecl → // nothing (nullable)
@@ -1102,7 +1172,43 @@ public class Parser {
 
         switch (current.value) {
             case "arr":
-                //VarDecl(element);
+                // VarDecl(element);
+                element.appendChild(doc.createTextNode(current.value));
+                if (hasNext()) {
+                    goToNext();
+                } else {
+                    throw new SyntaxError("Invalid array declaration on line " + current.line + ".");
+                }
+                TYP(element);
+
+                // [ check
+                if (!current.value.equals("[")) {
+                    throw new SyntaxError("Invalid array declaration on line " + current.line + ".");
+                }
+                element.appendChild(doc.createTextNode(current.value));
+
+                if (hasNext()) {
+                    goToNext();
+                } else {
+                    throw new SyntaxError("Invalid array declaration on line " + current.line + ".");
+                }
+
+                Const(element);
+
+                // ] check
+                if (!current.value.equals("]")) {
+                    throw new SyntaxError("Invalid array declaration on line " + current.line + ".");
+                }
+                element.appendChild(doc.createTextNode(current.value));
+
+                if (hasNext()) {
+                    goToNext();
+                } else {
+                    throw new SyntaxError("Invalid array declaration on line " + current.line + ".");
+                }
+
+                Var(element);
+
                 break;
             case "num":
                 TYP(element);

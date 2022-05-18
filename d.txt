@@ -1,0 +1,32 @@
+proc factorial{
+    proc fact{
+        proc facts{
+                    if(xy[20])
+                    then{
+                        call fact;
+                    }
+                    else{
+                        call factorial;
+                    };
+                    return;
+        },
+        proc user{
+            return;
+        },
+        return;
+    },
+    return;
+},
+main{
+    do{
+        while(input(z))
+        do{
+
+        };
+        
+    }
+    until(w);
+    halt;
+    arr bool[2] xyz;
+    num xy;
+}

@@ -37,7 +37,7 @@ public class Lexer {
         while (position < data.length()) {
 
             String t = data.substring(position, position + 1);
-            String regex = "^-|[a-zA-Z0-9 \\[\\]{}(),:;\"<>=\n\t]$";
+            String regex = "^-|[a-zA-Z0-9 \\[\\]{}(),:;\"=\n\t]$";
             p = Pattern.compile(regex);
             m = p.matcher(t);
 

@@ -1,0 +1,21 @@
+proc a{
+    proc b{
+        while(larger(add(1,2),sub(2,1)))
+        do{
+            if(mult(sub(add(2,4),eq(2,2))),or(and(not(15),not(5)),input(x)))
+            then{
+                x:= input(y);
+            }
+            else{
+                output := or(input(x),z);
+            };
+        };
+    },
+    proc c{
+            proc d{
+                if(-a)
+                then{
+                };
+        },
+    },
+},

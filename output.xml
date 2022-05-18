@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<GOD>
-    <CONFIGURATION>
-        chrome
-        <BROWSER>chrome</BROWSER>
-        <BASE>http:fut</BASE>
-        <EMPLOYEE>
-            <EMP_NAME>Anhorn, Irene</EMP_NAME>
-            <ACT_DATE>20131201</ACT_DATE>
-        </EMPLOYEE>
-        chrome
-        <BROWSER>chrome</BROWSER>
-    </CONFIGURATION>
-    <CONFIGURATION />
-</GOD>
+<SPLProgr>
+    main{
+    <Algorithm>
+        <Instr>
+            <Assign>
+                <LHS>output</LHS>
+                :=
+                <Expr>
+                    <BinOp>
+                        and(
+                        <Expr>
+                            <Const>true</Const>
+                        </Expr>
+                        ,
+                        <Expr>
+                            <UnOp>
+                                not(
+                                <Expr>
+                                    <UnOp>
+                                        not(
+                                        <Expr>
+                                            <BinOp>
+                                                add(
+                                                <Expr>
+                                                    <Const>"HESS"</Const>
+                                                </Expr>
+                                                ,
+                                                <Expr>
+                                                    <Const>true</Const>
+                                                </Expr>
+                                                )
+                                            </BinOp>
+                                        </Expr>
+                                        )
+                                    </UnOp>
+                                </Expr>
+                                )
+                            </UnOp>
+                        </Expr>
+                        )
+                    </BinOp>
+                </Expr>
+            </Assign>
+        </Instr>
+        ;
+    </Algorithm>
+    halt;}
+</SPLProgr>

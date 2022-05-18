@@ -1,0 +1,19 @@
+proc a{
+    if("HELLO")
+    then{
+        do{
+            output:=input(x);
+        }
+        until(eq(not(input(y)),mult(x,y)));
+    };
+},
+main{
+    if("HELL")
+    then{
+        call a;
+    }
+    halt;
+    num n;
+    string s;
+    bool b;
+}

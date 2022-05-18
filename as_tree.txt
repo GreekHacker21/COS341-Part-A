@@ -1,0 +1,61 @@
+└─0:SPL
+ ├─1:ProcDefs
+ │ └─2:PD
+ │  ├─3:proc: factorial
+ │  └─4:ProcDefs
+ │   └─5:PD
+ │    ├─6:proc: fact
+ │    └─7:ProcDefs
+ │     ├─8:PD
+ │     │ ├─9:proc: facts
+ │     │ └─10:Algorithm
+ │     │  └─11:Instr
+ │     │   └─12:Branch
+ │     │    ├─13:conditional branch: if
+ │     │    ├─14:Expr
+ │     │    │ └─15:Field
+ │     │    │  └─16:Const
+ │     │    │   └─17:integerLiteral: 20
+ │     │    ├─18:Algorithm
+ │     │    │ └─19:Instr
+ │     │    │  └─20:PCALL
+ │     │    │   └─21:proc: fact
+ │     │    ├─22:Alternat
+ │     │    └─23:conditional branch: else
+ │     │     └─24:Algorithm
+ │     │      └─25:Instr
+ │     │       └─26:PCALL
+ │     │        └─27:proc: factorial
+ │     └─28:ProcDefs
+ │      └─29:PD
+ │       └─30:proc: user
+ ├─31:Algorithm
+ │ └─32:Instr
+ │  └─33:Loop
+ │   ├─34:Conditional loop do
+ │   ├─35:Algorithm
+ │   │ └─36:Instr
+ │   │  └─37:Loop
+ │   │   ├─38:Conditional loop while
+ │   │   └─39:Expr
+ │   │    └─40:UnOp
+ │   │     ├─41:unop: input
+ │   │     └─42:Var
+ │   │      └─43:variable: z
+ │   └─44:Expr
+ │    └─45:Var
+ │     └─46:variable: w
+ └─47:VarDecl
+  ├─48:Dec
+  │ ├─49:TYP
+  │ │ └─50:type: bool
+  │ ├─51:Const
+  │ │ └─52:integerLiteral: 2
+  │ └─53:Var
+  │  └─54:variable: xyz
+  └─55:VarDecl
+   └─56:Dec
+    ├─57:TYP
+    │ └─58:type: num
+    └─59:Var
+     └─60:variable: xy

@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,7 +17,8 @@ import org.w3c.dom.Element;
 public class Main {
 
     public static void main(String[] args) {
-        Lexer lex = new Lexer("test.txt");
+        String fileName = fileChoice();
+        Lexer lex = new Lexer(fileName + ".txt");
         Token result = lex.run();
         if (result.value.equals("LEXICAL ERROR") || result.value.equals("File not found.")) {
             return;
@@ -24,7 +26,18 @@ public class Main {
         lex.printTokens();
         Parser parser = new Parser(result);
         parser.parse();
-        
+
+    }
+
+    public static String fileChoice() {
+        Scanner reader = new Scanner(System.in);
+        System.out.print("Enter the file name: ");
+        String name = reader.nextLine();
+        reader.close();
+        return name;
+    }
+
+    public static void xmlExample() {
         try {
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -37,7 +50,6 @@ public class Main {
             Element rootElement = doc.createElement("CONFIGURATION");
             root.appendChild(rootElement);
             rootElement.appendChild(doc.createTextNode("chrome"));
-
 
             Element browser = doc.createElement("BROWSER");
             browser.appendChild(doc.createTextNode("chrome"));

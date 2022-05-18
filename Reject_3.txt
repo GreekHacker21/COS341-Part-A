@@ -1,0 +1,11 @@
+main{
+    if(x>y)
+    then{
+        while(x>y)
+        do{
+    
+            output:= add(x,1);
+        };
+    };
+    halt;
+}
