@@ -22,8 +22,10 @@ public class Parser {
     public DocumentBuilderFactory docFactory;
     public DocumentBuilder docBuilder;
     public Document doc;
+    public String fileName;
 
-    Parser(Token r) {
+    Parser(Token r, String fN) {
+        fileName = fN;
         root = r;
         current = root;
         try {
@@ -49,7 +51,7 @@ public class Parser {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult output = new StreamResult(new File("output.xml"));
+            StreamResult output = new StreamResult(new File(fileName + ".xml"));
             transformer.transform(source, output);
             System.out.println("File saved!");
         } catch (TransformerException tfe) {
@@ -172,7 +174,7 @@ public class Parser {
         Element element = doc.createElement("ProcDefs");
         connect.appendChild(element);
 
-        PD(connect);
+        PD(element);
 
         if (!current.value.equals(",")) {
             throw new SyntaxError("missing a comma (,) after a proc definition on line " + current.line + ".");
@@ -214,7 +216,7 @@ public class Parser {
         if (!current.type.equals("userDefinedName")) {
             throw new SyntaxError("missing a userDefinedName on line " + current.line + ".");
         }
-        element.appendChild(doc.createTextNode(current.value));
+        //element.appendChild(doc.createTextNode(current.value));
         userDefinedName = current.value;
         addCustomText(element, current.type, current.value);
         if (hasNext()) {

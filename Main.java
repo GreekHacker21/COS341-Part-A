@@ -24,7 +24,7 @@ public class Main {
             return;
         }
         lex.printTokens();
-        Parser parser = new Parser(result);
+        Parser parser = new Parser(result, fileName);
         parser.parse();
 
     }
