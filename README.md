@@ -2,11 +2,11 @@
 Semester Project
 
 # Textfile Testing
-The textfiles you wish to test must be placed in the same directory as the Main.jar
+The textfiles you wish to test must be placed in the same directory as the u19141859.jar
 
 # Running the .jar file
 To use the program, you need to run the command:
-java -jar Main.jar
+java -jar u19141859.jar
 
 # Program Usage
 Once you have run the command mentioned above, there will be a prompt for the textfile name.
