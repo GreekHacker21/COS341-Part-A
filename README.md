@@ -5,7 +5,7 @@ Semester Project
 The textfiles you wish to test must be placed in the same directory as the u19141859.jar
 
 # Running the .jar file
-To use the program, you need to run the command:
+To use the program, you need to run the command: <br/>
 java -jar u19141859.jar
 
 # Program Usage
